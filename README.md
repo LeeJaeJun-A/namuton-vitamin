@@ -60,3 +60,8 @@ samples, guidance on mobile development, and a full API reference.
   flutter pub get
   flutter run
   ```
+
+## About APK file
+
+An Android Application Package (APK) file is a file format used to install and run applications on Android platforms. APK files for this project can be installed, and executed for Androiod users.
+
