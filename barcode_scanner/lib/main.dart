@@ -5,42 +5,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized(); // Flutter 바인딩 초기화
-  await Firebase.initializeApp(); // Firebase 초기화
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized(); // Ensuring Flutter engine initialization.
+  await Firebase.initializeApp(); // Initializing Firebase.
+  runApp(const MyApp()); // Running the app.
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);  
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]); 
     return MaterialApp(
-      theme: ThemeData.dark(), // 어두운 테마 설정
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: SplashScreen(), // Setting the home to SplashScreen widget.
     );
   }
 }
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key); // Constructor for MyHomePage.
   final String title;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState(); // Creating state for MyHomePage.
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DateTime date = DateTime.now();
-  final firestore = FirebaseFirestore.instance;
-  ScanController controller = ScanController(); // 스캐너 동작 제어
-  var _documentSnapshot;
-  var _data;
-  var _result = '상품 인식 중';
-  bool _isAvailable = true;
-	var _scanResult = ''; // for saving the scanned barcode number
+  DateTime date = DateTime.now(); // Initializing the current date.
+  final firestore = FirebaseFirestore.instance; // Instance of Firestore.
+  ScanController controller = ScanController(); // Controller for barcode scanner.
+  var _documentSnapshot; // To store document snapshot from Firestore.
+  var _data; // To store data fetched from Firestore. 
+  var _result = '상품 인식 중'; // Initial result text.
+  bool _isAvailable = true; // Whether the barcode date passes the expiration date or not
+  var _scanResult = ''; // for saving the scanned barcode number
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height; // Getting device height.
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Colors.white,
               ),
               child: 
-                Text('${date.year}.${date.month}.${date.day}', style: const TextStyle(fontSize: 24, color: Colors.black)),
+                Text('${date.year}.${date.month}.${date.day}', style: const TextStyle(fontSize: 24, color: Colors.black)),// Displaying the date.
               onPressed: () async{
                 DateTime? newDate = await showDatePicker(
                   context: context, 
@@ -74,14 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   initialEntryMode: DatePickerEntryMode.calendarOnly,
                 );
                 if(newDate == null) return;
-                setState(() => date = newDate);
+                setState(() => date = newDate); // Updating the date when the date is changed.
               },
             ),
             SizedBox(height: height * 0.015,),
             Expanded(
               child:Container(
               color:_result == '상품 인식 중' ? Color.fromARGB(200, 232, 232, 232) : 
-              (_isAvailable == true ? Color.fromARGB(200, 170,248,150): Color.fromARGB(200, 255, 132, 132)),
+              (_isAvailable == true ? Color.fromARGB(200, 170,248,150): Color.fromARGB(200, 255, 132, 132)), // Changing color based on product availability.
               alignment: Alignment.center,
               child: Text(
                   _result == '상품 인식 중' ? _result : _result + ' 까지 소비 가능',
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
+  // Method to build the barcode scanner.
   Widget _buildBarcodeScanner() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.715,
@@ -103,12 +103,12 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: controller,
         scanAreaScale: .7,
         scanLineColor: Colors.white,
-        onCapture: (data) {
+        onCapture: (data) { // Function to handle barcode capture.
           setState(() {
-            _scanResult = data;
+            _scanResult = data; // Updating scan result.
           });
-          getData(_scanResult);
-          controller.resume();
+          getData(_scanResult); // Fetching data from Firestore.
+          controller.resume(); // Resuming scanner.
         },
       ),
     );
@@ -119,10 +119,13 @@ class _MyHomePageState extends State<MyHomePage> {
   _data = _documentSnapshot.data();
   if (_data != null) {
     setState(() {
-      _result = _data['expiration_date'];
+      _result = _data['expiration_date']; // Updating result with expiration date.
+      // Parsing date from the barcode.
       int barcodeYear = int.parse(_result.substring(0,4));
       int barcodeMonth = int.parse(_result.substring(5,7));
       int barcodeDay = int.parse(_result.substring(8,10));
+
+      // Checking if the product is expired.
       if(date.year > barcodeYear){
         _isAvailable = false;
       }else if(date.year == barcodeYear && date.month > barcodeMonth){
@@ -137,9 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 }
 
+// Splash screen widget.
 class SplashScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();  // Navigating to home screen after splash screen.
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -150,8 +154,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 2), () {});
-    Navigator.pushReplacement(
+    await Future.delayed(Duration(seconds: 2), () {}); // Waiting for 2 seconds.
+    Navigator.pushReplacement( // Navigating to MyHomePage.
       context,
       MaterialPageRoute(builder: (context) => MyHomePage(title: 'Home Page')),
     );
