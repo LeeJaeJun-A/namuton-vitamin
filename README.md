@@ -4,7 +4,7 @@
 
 // 공공 API data fetch 하기
 
-
+```
   const express =require('./config/express');
   const {logger} = require('./config/winston');
   const axios = require('axios');
@@ -22,5 +22,6 @@
     })
     .catch(error => {
       console.error(error);
-    });```
+    });
+```
   
