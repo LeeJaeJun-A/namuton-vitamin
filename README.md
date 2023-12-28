@@ -2,10 +2,11 @@
 
 2023 namuton team vitamin. expiration date check using barcode application
 
-// 공공 API data fetch 하기
+
 
 ```
 
+  // 공공 API data fetch 하기
   const express =require('./config/express');
   const {logger} = require('./config/winston');
   const axios = require('axios');
