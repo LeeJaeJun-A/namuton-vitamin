@@ -5,7 +5,6 @@
 
 
 ```
-
   // 공공 API data fetch 하기
   const express =require('./config/express');
   const {logger} = require('./config/winston');
@@ -25,7 +24,6 @@
     .catch(error => {
       console.error(error);
     });
-
 ```
   
 ## Getting Started
@@ -45,26 +43,20 @@ samples, guidance on mobile development, and a full API reference.
 ### 1. Clone repository:
 
    ```
-
    bash
    git clone https://github.com/LeeJaeJun-A/namuton-vitamin.git
    cd namuton-vitamin
-
    ```
 
 ### 2. Install npm package
 
   ```
-
   npm install
-
   ```
 
 ### 3. Build and execute 
   ```
-
   cd path/to/flutter_app
   flutter pub get
   flutter run
-
   ```
